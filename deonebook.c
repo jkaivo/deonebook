@@ -1,16 +1,25 @@
 #define _XOPEN_SOURCE 700
 #include <stdio.h>
 #include <unistd.h>
+#include "deonebook.h"
 
 int main(int argc, char *argv[])
 {
-	char *serial = NULL;
+	enum { DECRYPT, GENERATE, READ } mode = DECRYPT;
 
 	int c;
-	while ((c = getopt(argc, argv, "s:")) != -1) {
+	while ((c = getopt(argc, argv, "RGk:")) != -1) {
 		switch (c) {
-		case 's':
-			serial = optarg;
+		case 'R':
+			mode = READ;
+			break;
+
+		case 'G':
+			mode = GENERATE;
+			break;
+
+		case 'k':
+			/* keyfile = optarg; */
 			break;
 
 		default:
@@ -18,10 +27,24 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	if (serial == NULL) {
-		fprintf(stderr, "%s: missing serial number (provide via -s)\n",
-			argv[0]);
-		return 1;
+	if (mode != DECRYPT) {
+		unsigned char *key = NULL;
+		if (mode == READ) {
+			key = readkey("./.shm");
+		} else {
+			char *device = "mmcblk0";
+			if (optind < argc) {
+				device = argv[optind];
+			}
+			key = genkey(device);
+		}
+
+		if (key == NULL) {
+			return 1;
+		}
+
+		fwrite(key, 16, 1, stdout);
+		return 0;
 	}
 
 	if (optind >= argc) {
@@ -30,6 +53,6 @@ int main(int argc, char *argv[])
 	}
 
 	do {
-		printf("decrypting %s [%s]\n", argv[optind], serial);
+		printf("decrypting %s\n", argv[optind]);
 	} while (++optind < argc);
 }
