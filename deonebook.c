@@ -43,7 +43,11 @@ int main(int argc, char *argv[])
 			return 1;
 		}
 
-		fwrite(key, 16, 1, stdout);
+		for (int i = 0; i < KEY_SIZE; i++) {
+			printf("%02hhx", key[i]);
+		}
+		printf("\n");
+
 		return 0;
 	}
 
