@@ -18,9 +18,19 @@ all: $(BINDIR)/deonebook
 clean:
 	rm -f $(BINDIR)/deonebook $(OBJDIR)/*.o
 
+$(BINDIR)/deonebook: $(OBJDIR)/readkey.o
+$(OBJDIR)/readkey.o: $(SRCDIR)/deonebook.h
+$(OBJDIR)/readkey.o: $(SRCDIR)/readkey.c
+	$(CC) $(CFLAGS) -o $@ -c $(SRCDIR)/readkey.c
+
 $(BINDIR)/deonebook: $(OBJDIR)/deonebook.o
 $(OBJDIR)/deonebook.o: $(SRCDIR)/deonebook.c
 	$(CC) $(CFLAGS) -o $@ -c $(SRCDIR)/deonebook.c
+
+$(BINDIR)/deonebook: $(OBJDIR)/genkey.o
+$(OBJDIR)/genkey.o: $(SRCDIR)/deonebook.h
+$(OBJDIR)/genkey.o: $(SRCDIR)/genkey.c
+	$(CC) $(CFLAGS) -o $@ -c $(SRCDIR)/genkey.c
 
 $(BINDIR)/deonebook:
 	$(LD) $(LDFLAGS) -o $@ $(OBJDIR)/*.o $(LDLIBS)
