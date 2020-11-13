@@ -2,13 +2,14 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "deonebook.h"
 
 #define SCR_SIZE 8
 #define CSD_SIZE 16
 #define CID_SIZE 16
 #define KEY_SIZE 16
 
-unsigned char twiddle(unsigned char buf[2])
+static unsigned char twiddle(unsigned char buf[2])
 {
 	unsigned char c = 0;
 
@@ -32,7 +33,7 @@ unsigned char twiddle(unsigned char buf[2])
 	return c;
 }
 
-void get_sd_register(const char *dev, const char *reg, size_t n, unsigned char buf[n])
+static void get_sd_register(const char *dev, const char *reg, size_t n, unsigned char buf[n])
 {
 	char path[256];
 	snprintf(path, sizeof(path), "/sys/block/%s/device/%s", dev, reg);
@@ -51,7 +52,7 @@ void get_sd_register(const char *dev, const char *reg, size_t n, unsigned char b
 	fclose(f);
 }
 
-unsigned char * getkey(const char *dev)
+unsigned char * genkey(const char *dev)
 {
 	static unsigned char key[KEY_SIZE];
 	const unsigned char keycode[] = "eone";
@@ -79,14 +80,4 @@ unsigned char * getkey(const char *dev)
 	}
 
 	return key;
-}
-
-int main(void)
-{
-	unsigned char *key = getkey("mmcblk0");
-	printf("calculated:");
-	for (size_t i = 0; i < KEY_SIZE; i++) {
-		printf(" %02hhx", key[i]);
-	}
-	printf("\n");
 }
