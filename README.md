@@ -49,9 +49,9 @@ original `.A001` file, you will not be able to use that SD card in your
 eOneBook anymore. You are strongly advised to back up the entire SD card
 before attempting this.***
 
-    mv .A001 eonebook			# rename the official firmware
-    cp $DEONEBOOKDIR/deonebook .	# copy over the key extractor
-    cp $DEONEBOOKDIR/extract.sh .A001	# copy over the extraction script
+    mv .A001 eonebook                   # rename the official firmware
+    cp $DEONEBOOKDIR/deonebook .        # copy over the key extractor
+    cp $DEONEBOOKDIR/extract.sh .A001   # copy over the extraction script
 
 Put the SD card in your eOneBook and open it up. When the official interface
 comes up, the key extraction is complete. Close the eOneBook and there will be
