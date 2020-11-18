@@ -3,7 +3,7 @@
 
 #define KEY_SIZE 16
 
-unsigned char *genkey(const char *dev);
+unsigned char *genkey(int dirfd);
 unsigned char *readkey(const char *path);
 
 #endif

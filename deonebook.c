@@ -1,4 +1,5 @@
 #define _XOPEN_SOURCE 700
+#include <dirent.h>
 #include <string.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -37,12 +38,21 @@ int main(int argc, char *argv[])
 			if (optind < argc) {
 				device = argv[optind];
 			}
+
 			if (strstr(device, "mmcblk") != device) {
 				fprintf(stderr, "device must be an mmcblk device\n");
 				return 1;
 			}
 
-			key = genkey(device);
+			char path[256];
+			snprintf(path, sizeof(path), "/sys/block/%s/device", device);
+			DIR *d = opendir(path);
+			if (d == NULL) {
+				fprintf(stderr, "device '%s' not found\n", device);
+				return 1;
+			}
+
+			key = genkey(dirfd(d));
 		}
 
 		if (key == NULL) {
