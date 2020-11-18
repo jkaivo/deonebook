@@ -1,4 +1,5 @@
 #define _XOPEN_SOURCE 700
+#include <string.h>
 #include <stdio.h>
 #include <unistd.h>
 #include "deonebook.h"
@@ -36,6 +37,11 @@ int main(int argc, char *argv[])
 			if (optind < argc) {
 				device = argv[optind];
 			}
+			if (strstr(device, "mmcblk") != device) {
+				fprintf(stderr, "device must be an mmcblk device\n");
+				return 1;
+			}
+
 			key = genkey(device);
 		}
 
