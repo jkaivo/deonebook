@@ -6,7 +6,7 @@
 
 CC=c99
 LD=$(CC)
-CFLAGS=-Wall -Wextra -Wpedantic -Werror -g
+CFLAGS=-Wall -Wextra -Wpedantic -Werror -g3
 LDFLAGS=
 LDLIBS=
 SRCDIR=.
@@ -31,6 +31,17 @@ $(BINDIR)/deonebook: $(OBJDIR)/genkey.o
 $(OBJDIR)/genkey.o: $(SRCDIR)/deonebook.h
 $(OBJDIR)/genkey.o: $(SRCDIR)/genkey.c
 	$(CC) $(CFLAGS) -o $@ -c $(SRCDIR)/genkey.c
+
+$(BINDIR)/deonebook: $(OBJDIR)/decrypt.o
+$(OBJDIR)/decrypt.o: $(SRCDIR)/deonebook.h
+$(OBJDIR)/decrypt.o: $(SRCDIR)/decrypt.c
+$(OBJDIR)/decrypt.o: $(SRCDIR)/tiny-AES-c/aes.c
+	$(CC) $(CFLAGS) -o $@ -c $(SRCDIR)/decrypt.c
+
+$(BINDIR)/deonebook: $(OBJDIR)/getkey.o
+$(OBJDIR)/getkey.o: $(SRCDIR)/deonebook.h
+$(OBJDIR)/getkey.o: $(SRCDIR)/getkey.c
+	$(CC) $(CFLAGS) -o $@ -c $(SRCDIR)/getkey.c
 
 $(BINDIR)/deonebook:
 	$(LD) $(LDFLAGS) -o $@ $(OBJDIR)/*.o $(LDLIBS)
